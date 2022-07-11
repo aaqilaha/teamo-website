@@ -1,206 +1,150 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teamo_web/Navbar.dart';
+import 'package:teamo_web/footer.dart';
+import 'package:teamo_web/advantages.dart';
+import 'package:teamo_web/featuresOne.dart';
+import 'package:teamo_web/typetrans.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'freeinstall.dart';
+import 'home.dart';
 
-class MyApp extends StatelessWidget {
+void main() => runApp(const MyApp());
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var baseTheme = ThemeData(brightness: Brightness.light);
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Teamo',
       theme: ThemeData(
-        primarySwatch: Colors.red,
-        textTheme: GoogleFonts.latoTextTheme(baseTheme.textTheme),
+        brightness: Brightness.light,
+        
+        textTheme: GoogleFonts.nunitoTextTheme(baseTheme.textTheme),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late ScrollController _scrollViewController;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _scrollViewController = ScrollController(initialScrollOffset: 0.0);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Lebar ${MediaQuery.of(context).size.width}');
+    print('Tinggi ${MediaQuery.of(context).size.height}');
+
+    double cWidth = MediaQuery.of(context).size.width * 0.5;
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.menu),
-        title: Text('Teamo Website'),
-        actions: [
-          Icon(Icons.favorite),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(Icons.search),
-          ),
-          Icon(Icons.more_vert),
-        ],
-        backgroundColor: Color.fromARGB(255, 53, 102, 102),   
-      ),
-      
-      
-      body: 
-      Container(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        body: Stack(
+      children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SingleChildScrollView(
+            controller: _scrollViewController,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //Section1
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: Column(
-                    children: [
-                      Text('Team Money',
-                          style: GoogleFonts.lato().copyWith(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 60,
-                          )
-                          //   style: TextStyle(
-                          //   fontFamily: ,
-                          //   fontWeight: FontWeight.w900,
-                          //   fontSize: 60,
-                          // ),
-                          ),
-                      Text(
-                        'Catat Keuangan team atau kelompokmu secara mudah, transparan dan aman.',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
+              children: [
+                // body
+                Home(cWidth: cWidth),
+                FreeInstall(
+                  onTapInstall: () {
+                    _scrollViewController.animateTo(
+                        _scrollViewController.position.minScrollExtent,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.decelerate);
+
+                    _scrollViewController
+                        .jumpTo(_scrollViewController.position.maxScrollExtent);
+                  },
                 ),
-                //Section2
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                  ]),
+                AdvantagesWidget(),
+                FeaturesOneWidget(),
+                TypeTransWidget(),
+                Footer(
+                  onTapHomef: () {
+                    _scrollViewController.animateTo(
+                        _scrollViewController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.decelerate);
+
+                    _scrollViewController
+                        .jumpTo(_scrollViewController.position.minScrollExtent);
+                  },
+                  onTapFeaturesf: () {
+                    _scrollViewController.animateTo(
+                        _scrollViewController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.decelerate);
+
+                    _scrollViewController.jumpTo(
+                        _scrollViewController.position.maxScrollExtent * 0.45);
+                  },
+                  onTapDownloadf: () {
+                    _scrollViewController.animateTo(
+                        _scrollViewController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 1000),
+                        curve: Curves.decelerate);
+
+                    _scrollViewController
+                        .jumpTo(_scrollViewController.position.maxScrollExtent);
+                  },
                 ),
-                //Section3
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          'Mudah',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          'Informatif',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          'Transparant',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),  
-                    ],
-                  ),
-                ),
-                //Section2
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/img01.jpg',
-                          height: 300, width: 300),
-                    ),
-                  ]),
-                ),
-                // const Text(
-                //   'You have pushed the button this many times:',
-                // ),
-                // Text(
-                //   '$_counter',
-                //   style: Theme.of(context).textTheme.headline4,
-                // ),
               ],
             ),
           ),
         ),
-      ),
+        Navbar(
+          onTapHome: () {
+            _scrollViewController.animateTo(
+                _scrollViewController.position.minScrollExtent,
+                duration: Duration(milliseconds: 1000),
+                curve: Curves.decelerate);
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+            _scrollViewController
+                .jumpTo(_scrollViewController.position.minScrollExtent);
+          },
+          onTapFeatures: () {
+            _scrollViewController.animateTo(
+                _scrollViewController.position.minScrollExtent,
+                duration: Duration(milliseconds: 1000),
+                curve: Curves.decelerate);
+
+            _scrollViewController
+                .jumpTo(_scrollViewController.position.maxScrollExtent * 0.45);
+          },
+          onTapDownload: () {
+            _scrollViewController.animateTo(
+                _scrollViewController.position.minScrollExtent,
+                duration: Duration(milliseconds: 1000),
+                curve: Curves.decelerate);
+
+            _scrollViewController
+                .jumpTo(_scrollViewController.position.maxScrollExtent);
+          },
+        ),
+      ],
+    ));
   }
 }
